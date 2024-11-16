@@ -12,14 +12,15 @@ namespace EPLogic
         private string nama;
         private string marga;
         private Guid id;
-        private OrangBatak bapak;
-        private OrangBatak mamak;
-        private OrangBatak pasangan;
-        private OrangBatak abang;
-        private OrangBatak kakak;
-        private OrangBatak anak;
-        private OrangBatak boru;
+        private OrangBatak? bapak;
+        private OrangBatak? mamak;
+        private OrangBatak? pasangan;
+        private OrangBatak? abang;
+        private OrangBatak? kakak;
+        private OrangBatak? anak;
+        private OrangBatak? boru;
         private string panggilan;
+        private Gender jenisKelamin;
         #endregion
 
         #region getter setter
@@ -34,6 +35,7 @@ namespace EPLogic
         public OrangBatak Anak { get { return anak; } set { anak = value; } }
         public OrangBatak Boru { get { return boru; } set { boru = value; } }
         public string Panggilan { get { return panggilan; } set { panggilan = value; } }
+        public Gender JenisKelamin { get { return jenisKelamin; } set { jenisKelamin = value; } }
         #endregion
 
         #region constructor
@@ -42,7 +44,14 @@ namespace EPLogic
             nama = "";
             marga = "";
             id = Guid.NewGuid();
-            mamak = null; bapak = null; pasangan = null; abang = null; kakak = null; anak = null; boru = null;
+            mamak = null;
+            bapak = null;
+            pasangan = null;
+            abang = null;
+            kakak = null;
+            anak = null;
+            boru = null;
+            jenisKelamin = Gender.Male;
         }
 
         public OrangBatak(string _panggilan)
@@ -51,7 +60,14 @@ namespace EPLogic
             marga = "";
             id = Guid.NewGuid();
             panggilan = _panggilan;
-            mamak = null; bapak = null; pasangan = null; abang = null; kakak = null; anak = null; boru = null;
+            mamak = null;
+            bapak = null;
+            pasangan = null;
+            abang = null;
+            kakak = null;
+            anak = null;
+            boru = null;
+            jenisKelamin = Gender.Male;
         }
         #endregion
 
@@ -71,7 +87,7 @@ namespace EPLogic
                 }
                 this.bapak = kawanIni;
                 if (kawanIni.Anak == null ||
-                    !kawanIni.Anak.Equals(this))
+                    (kawanIni.Anak != null && !kawanIni.Anak.Equals(this)))
                 {
                     kawanIni.BapaknyaSi(this);
                 }
@@ -103,13 +119,13 @@ namespace EPLogic
                 }
                 this.bapak = kawanIni;
                 if (kawanIni.Boru == null ||
-                    !kawanIni.Boru.Equals(this))
+                    (kawanIni.Boru != null && !kawanIni.Boru.Equals(this)))
                 {
                     kawanIni.BapaknyaSi(this);
                 }
                 else
                 {
-                    throw new InvalidOperationException("anak yatim lu!");
+                    throw new InvalidOperationException("anak piatu lu!");
                 }
                 return true;
             }
@@ -122,7 +138,37 @@ namespace EPLogic
 
         public bool BapaknyaSi(OrangBatak kawanIni)
         {
-            throw new NotImplementedException();
+            try
+            {
+                if (kawanIni == null ||
+                    kawanIni.Equals(this))
+                {
+                    throw new InvalidOperationException("yakalik anak lu hampa!");
+                }
+                if (kawanIni.Mamak.Equals(this))
+                {
+                    throw new InvalidOperationException("jadi kau cw atau cw?! mau jadi mamak sama bapak bah!");
+                }
+                this.bapak = kawanIni;
+                if ((kawanIni.Boru == null ||
+                    !kawanIni.Boru.Equals(this)) &&
+                    (kawanIni.Anak == null ||
+                    !kawanIni.Anak.Equals(this))
+                    )
+                {
+                    kawanIni.BapaknyaSi(this);
+                }
+                else
+                {
+                    throw new InvalidOperationException("kagak punya anak lu!");
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+            return false;
         }
 
         public bool KawinSama(OrangBatak kawanIni)
