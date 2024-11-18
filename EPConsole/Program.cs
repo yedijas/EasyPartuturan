@@ -7,7 +7,9 @@ namespace EPConsole
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            OrangBatak siAdit = new OrangBatak("Adit", "Situmeang", Gender.Male);
+            siAdit.AnaknyaSi(new OrangBatak("Diapari", "Situmeang", Gender.Male));
+            //siAdit.AnaknyaSi(siAdit);
         }
     }
 }
